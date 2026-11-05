@@ -5,12 +5,8 @@ import "core:net"
 import "core:strings"
 import "core:bytes"
 
-main :: proc (){
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    fmt.eprintln("Logs from your program will appear here!")
-
-    // Uncomment the code below to pass the first stage
-    listen_socket, listen_err := net.listen_tcp(net.Endpoint{
+redis_entry :: proc() {
+	listen_socket, listen_err := net.listen_tcp(net.Endpoint{
         port = 6379,
         address = net.IP4_Loopback
     })
@@ -25,5 +21,12 @@ main :: proc (){
     pong := "+PONG\r\n"
 
     net.send_tcp(client_socket, buf=transmute([]byte)pong)
+}
+
+main :: proc (){
+
+	for {
+		redis_entry()
+	}
 
 }
