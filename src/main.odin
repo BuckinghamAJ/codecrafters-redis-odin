@@ -21,4 +21,9 @@ main :: proc (){
     if accept_err != nil {
         fmt.panicf("%s", accept_err)
     }
+
+    pong := "+PONG\r\n"
+
+    net.send_tcp(client_socket, buf=transmute([]byte)pong)
+
 }
