@@ -49,10 +49,21 @@ client_receive_msg :: proc(client: ^Client) {
  	n, err := receive(client.socket, buf[:])
  	if err != nil {
 		fmt.printfln("Error receving message %s on socket: %d", buf[:], client.socket)
-
 	}
-  	message := buf[:n]
+  	message := string(buf[:n])
    	net.send_tcp(client.socket, buf=transmute([]byte)pong)
+}
+
+receive :: proc(socket: net.TCP_Socket, buf: []byte) -> (bytes_received: int, err: net.TCP_Recv_Error) {
+
+	br := net.recv_tcp(socket, buf) or_return
+	fmt.printfln("bytes_received: %d", br)
+
+	if br == 0 do return 0, .Connection_Closed
+
+	fmt.printfln("Message Recieved: %q", string(buf[:br]))
+
+	return br, nil
 }
 
 client_remove :: proc(client: ^Client) {
